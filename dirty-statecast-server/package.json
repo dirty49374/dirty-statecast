@@ -1,0 +1,23 @@
+{
+  "name": "dirty-statecast-server",
+  "version": "0.0.1",
+  "description": "dirty49374's statecast server",
+  "main": "lib/statecast-server.js",
+  "scripts": {
+    "start": "nodemon bin/cmd.js --debug",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "meow": "^3.7.0",
+    "socket.io": "^2.0.3",
+    "winston-color": "^1.0.0"
+  },
+  "bin":{
+    "statecast-server": "bin/cmd.js"
+  }
+}
