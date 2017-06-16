@@ -1,2 +1,2 @@
 # dirty-statecast
-simple json state publish
+simple json state pubsub service using http and socket.io
