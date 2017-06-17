@@ -1,0 +1,15 @@
+{
+  "name": "dirty-statecast-ioclient",
+  "version": "0.0.5",
+  "description": "dirty49374's statecast socket.io client library",
+  "main": "statecast-ioclient.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io-client": "^2.0.3"
+  }
+}

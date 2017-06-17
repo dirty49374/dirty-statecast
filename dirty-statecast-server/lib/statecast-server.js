@@ -1,3 +1,4 @@
+var _ = require('lodash');
 
 class StateCastServer {
     
@@ -8,13 +9,19 @@ class StateCastServer {
 
     bindServer(http, app, debug) {
         if (debug) {
-            this.debug = require('winston-color');
+            this.debug = require('winston-color').debug;
         }
 
         this.io = require('socket.io')(http);
         
         this.io.on('connection', (socket) => {
+            console.log('connected', debug)
             this.debug && this.debug('a user connected');
+
+            socket.on('set', (data) => {
+                this.debug && this.debug('set-x')
+                this.set(data.key, data.value);
+            })
 
             socket.on('subscribe', (key) => {
                 socket.emit('data', this.data(key));
@@ -45,7 +52,7 @@ class StateCastServer {
     }
 
     get(key) {
-        this.debug && this.debug(`set [${key}] = ${JSON.stringify(value)}`);
+        this.debug && this.debug(`get [${key}] = ${JSON.stringify(this.store[key])}`);
         return this.undefinedToNull(this.store[key]);
     }
 
@@ -58,11 +65,16 @@ class StateCastServer {
         this.debug && this.debug(`set [${key}] = ${JSON.stringify(value)}`);
         try {
             if (value === null || value === undefined) {
-                delete this.store[key];
+                if (this.store[key] !== undefined) {
+                    delete this.store[key];
+                    this.updated(key);
+                }
             } else {
-                this.store[key] = value;
+                if (!_.isEqual(this.store[key], value)) {
+                    this.store[key] = value;
+                    this.updated(key);
+                }
             }
-            this.updated(key);
             return true;
         } catch (e) {
             return false;
@@ -70,9 +82,9 @@ class StateCastServer {
     }
 };
 
-function bindServer(http, app) {
+function bindServer(http, app, debug) {
     var server = new StateCastServer();
-    server.bindServer(http, app)
+    server.bindServer(http, app, debug)
 
     return server;
 }
