@@ -1,32 +1,39 @@
 #!/usr/bin/env node
 
 var logger = require('winston-color');
-const meow = require('meow');
-const cli = meow(`
-Usage
-    $ statecast-server
+var program = require('commander');
+function myParseInt(string, defaultValue) {
+  var int = parseInt(string, 10);
 
-Options
-    --port      change http port (default is 8998)
-    --debug     prints debug logs
-    -h, --help  this screen
+  if (typeof int == 'number') {
+    return int;
+  } else {
+    return defaultValue;
+  }
+}
 
-Examples
-    $ statecast-server
-    $ statecast-server --port 80
+program
+    .version('0.0.1')
+    .usage('[options]')
+    .option('-p, --port <number>', 'http port', myParseInt, 8998)
+    .option('-d, --debug', 'debug')
+    .option('--username <username>', 'username')
+    .option('--password <password>', 'password')
+    .parse(process.argv);
 
-`);
-
-const listen = ({ port, debug }) => {
-    var logger = debug && require('winston-color').debug;
-    port = port || 8998;
-
+const listen = ({ port, debug, username, password }) => {
     var app = require('express')();
     var http = require('http').Server(app);
     var state = require('../lib/statecast-server').bindServer(http, app, debug);
+    var basicAuth = require('basic-auth-connect');
     var bodyParser = require('body-parser');
+    var logger = debug && require('winston-color').debug;
 
     app.use(bodyParser.text({type: '*/*'}))
+    if (username && password) {
+        app.use(basicAuth(username, password));
+    }
+
     app.get('/index.html', (req, res) => {
         res.sendFile(__dirname + '/www/index.html');
     });
@@ -51,7 +58,7 @@ const listen = ({ port, debug }) => {
         });
 
     http.listen(port, () => {
-        logger && logger(`listening on *:${port}`);
+        console.log(`listening on *:${port}`);
 
         state.set('/alive', Date.now());
         setInterval(() => {
@@ -60,4 +67,4 @@ const listen = ({ port, debug }) => {
     });
 }
 
-listen(cli.flags);
+listen(program);
