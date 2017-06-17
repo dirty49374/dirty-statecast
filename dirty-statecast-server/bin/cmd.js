@@ -2,7 +2,7 @@
 
 var logger = require('winston-color');
 var program = require('commander');
-function myParseInt(string, defaultValue) {
+const myParseInt = (string, defaultValue) => {
   var int = parseInt(string, 10);
 
   if (typeof int == 'number') {
@@ -10,16 +10,7 @@ function myParseInt(string, defaultValue) {
   } else {
     return defaultValue;
   }
-}
-
-program
-    .version('0.0.1')
-    .usage('[options]')
-    .option('-p, --port <number>', 'http port', myParseInt, 8998)
-    .option('-d, --debug', 'debug')
-    .option('--username <username>', 'username')
-    .option('--password <password>', 'password')
-    .parse(process.argv);
+};
 
 const listen = ({ port, debug, username, password }) => {
     var app = require('express')();
@@ -67,4 +58,12 @@ const listen = ({ port, debug, username, password }) => {
     });
 }
 
+program
+    .version('0.0.1')
+    .usage('[options]')
+    .option('-p, --port <number>', 'http port', myParseInt, 8998)
+    .option('-d, --debug', 'debug')
+    .option('--username <username>', 'username')
+    .option('--password <password>', 'password')
+    .parse(process.argv);
 listen(program);

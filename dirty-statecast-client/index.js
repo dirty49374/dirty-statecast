@@ -5,8 +5,8 @@ const help = () => {
     console.log(`
 Usage
     $ statecast --help
-    $ statecast [ http://server:port ] key get
-    $ statecast [ http://server:port ] key set json
+    $ statecast [ host:port ] key get
+    $ statecast [ host:port ] key set json
 `);
 }
 
@@ -75,4 +75,8 @@ const command = (argv) => {
     }
 }
 
-command(process.argv.splice(2))
+try {
+    command(process.argv.splice(2))
+} catch (e) {
+    help();
+}

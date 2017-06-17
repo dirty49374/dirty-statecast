@@ -1,6 +1,6 @@
 {
   "name": "dirty-statecast-server",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "dirty49374's statecast server",
   "main": "lib/statecast-server.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "body-parser": "^1.17.2",
     "commander": "^2.9.0",
     "express": "^4.15.3",
+    "lodash": "^4.17.4",
     "socket.io": "^2.0.3",
     "winston-color": "^1.0.0"
   },
