@@ -15,7 +15,6 @@ class StateCastServer {
         this.io = require('socket.io')(http);
         
         this.io.on('connection', (socket) => {
-            console.log('connected', debug)
             this.debug && this.debug('a user connected');
 
             socket.on('set', (data) => {
